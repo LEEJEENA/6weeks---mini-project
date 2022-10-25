@@ -1,6 +1,5 @@
 import React from "react";
 import styled, { css } from "styled-components";
-
 const Input = (props) => {
   return (
     <StInput {...props} disabled={props.disabled}>
@@ -8,9 +7,7 @@ const Input = (props) => {
     </StInput>
   );
 };
-
 export default Input;
-
 const StInput = styled.input`
   padding: 5px 20px;
   margin: 5px 5px;
@@ -48,7 +45,6 @@ const StInput = styled.input`
         `;
     }
   }}
-
   ${({ _color }) => {
     switch (_color) {
       case "line":

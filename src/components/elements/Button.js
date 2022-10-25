@@ -1,6 +1,5 @@
 import React from "react";
 import styled, { css } from "styled-components";
-
 const Button = (props) => {
   return (
     <StButton {...props} disabled={props.disabled}>
