@@ -1,226 +1,345 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-  post: [],
-  comment: [],
-  isLoading: false,
-  error: null,
+  melon: [],
+  user: [{ username: 1234 }, { username: 124555 }],
+  nameCheck: false,
+  idCheck: false,
 };
+const accessToken = localStorage.getItem("accessToken");
+const refreshToken = localStorage.getItem("refreshToken");
 
-export const __getPosts = createAsyncThunk(
-  "getPosts",
+// axios.defaults.baseURL = "https://api.example.com";
+// axios.defaults.headers.common["Authorization"] = AUTH_TOKEN;
+// axios.defaults.headers.post["Content-Type"] =
+//   "application/x-www-form-urlencoded";
+
+const instance = axios.create({
+  baseURL: "/",
+  headers: { Authorization: accessToken, "Refresh-Token": refreshToken },
+});
+
+// // 인스턴스가 생성 된 후 기본값 변경
+// instance.defaults.headers.common["Authorization"] = AUTH_TOKEN;
+
+export const __addMelon = createAsyncThunk(
+  "melon/__addMelon",
   async (payload, thunkAPI) => {
+    const frm = new FormData();
+    const dataSet = {
+      title: payload.title,
+      singer: payload.singer,
+      song: payload.song,
+      content: payload.content,
+      category: payload.category,
+    };
+
+    frm.append("data", JSON.stringify(dataSet));
+    frm.append("file", payload.file);
+
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_JSON_SERVER}/post`
-      );
-      return thunkAPI.fulfillWithValue(data);
+      const data = await axios
+        .post(`http://3.36.97.100/melon/`, frm, {
+          headers: {
+            Authorization: accessToken,
+            "Refresh-Token": refreshToken,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(function a(response) {
+          alert("게시되었습니다.");
+          window.location.replace("/");
+        })
+        .catch(function (error) {
+          console.log(error.response);
+        });
+
+      return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
-export const __getComments = createAsyncThunk(
-  "getComments",
+// export const __Login = createAsyncThunk(
+//   "melon/__Login",
+//   async (payload, thunkAPI) => {
+//     try {
+//       const data = await axios.post("http://3.36.97.100/auth/login", payload);
+//       return thunkAPI.fulfillWithValue(data.data);
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error);
+//     }
+//   }
+// );
+export const __Login = createAsyncThunk(
+  "melon/__Login",
   async (payload, thunkAPI) => {
     try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_JSON_SERVER}/comment`
-      );
-      return thunkAPI.fulfillWithValue(data);
+      console.log(payload);
+      const data = await axios.post("http://3.36.97.100/auth/login", payload);
+      console.log(data);
+      const Access_Token = data.headers.access_token;
+      const Refresh_Token = data.headers.refresh_token;
+      if (data.status === 200 || data.status === 201) {
+        window.localStorage.setItem("Access_Token", Access_Token);
+        window.localStorage.setItem("Refresh_Token", Refresh_Token);
+        window.localStorage.setItem("nickname", data.data.data);
+        // setCookie("Access_Token", Access_Token);
+        // setCookie("Refresh_Token", Refresh_Token);
+        // setCookie("nickname", data.data.data);
+        alert("로그인 성공");
+        window.location.replace("/");
+      }
+      return thunkAPI.fulfillWithValue(data.data);
+    } catch (error) {
+      if (error.data.status > 400 && error.data.status < 500) {
+        // window.location.reload();
+        alert("로그인 실패");
+      }
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const __SignUp = createAsyncThunk(
+  "melon/__SignUp",
+  async (payload, thunkAPI) => {
+    try {
+      console.log(payload);
+      await axios
+        .post("http://3.36.97.100/auth/signup", payload)
+
+        .then((response) => {
+          console.log(response);
+          return thunkAPI.fulfillWithValue(response.data);
+        });
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
-export const __addPost = createAsyncThunk(
-  "addPost",
+// export const __getUser = createAsyncThunk(
+//   "melon/__getUser",
+//   async (payload, thunkAPI) => {
+//     try {
+//       const data = await axios.get("http://3.36.97.100/user");
+//       return thunkAPI.fulfillWithValue(data.data);
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error);
+//     }
+//   }
+// );
+
+export const __nameCheck = createAsyncThunk(
+  "melon/__nameCheck",
   async (payload, thunkAPI) => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_JSON_SERVER}/post`,
+      const data = await axios.post(
+        `http://3.36.97.100/user/nameCheck/`,
         payload
       );
-      return thunkAPI.fulfillWithValue(data);
+      return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
-export const __addComment = createAsyncThunk(
-  "addComment",
+export const __idCheck = createAsyncThunk(
+  "melon/__idCheck",
   async (payload, thunkAPI) => {
     try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_JSON_SERVER}/comment`,
-        payload
-      );
-      return thunkAPI.fulfillWithValue(data);
+      // console.log(payload);
+      const data = await axios.post(`http://3.36.97.100/auth/idCheck`, {
+        username: payload,
+      });
+      // console.log(data.data);
+      // console.log(payload);
+      return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
-export const __deletePost = createAsyncThunk(
-  "deletePost",
+export const __getmelon = createAsyncThunk(
+  "melon/__getmelon",
   async (payload, thunkAPI) => {
     try {
-      await axios.delete(
-        `${process.env.REACT_APP_JSON_SERVER}/post/${payload}`
-      );
+      const data = await axios.get("http://3.36.97.100/melon");
+      return thunkAPI.fulfillWithValue(data.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const __createmelon = createAsyncThunk(
+  "melon/__createmelon",
+  async (payload, thunkAPI) => {
+    try {
+      const data = await axios.post("http://3.36.97.100/melon", payload);
+      return thunkAPI.fulfillWithValue(data.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+export const __deleteTodo = createAsyncThunk(
+  "melon/__deleteTodo",
+  async (payload, thunkAPI) => {
+    console.log("payload", payload);
+    try {
+      const data = await axios.delete(`http://3.36.97.100/melon/${payload}`);
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
-
-export const __deleteComment = createAsyncThunk(
-  "deleteComment",
+export const __editTodo = createAsyncThunk(
+  "melon/__editTodo",
   async (payload, thunkAPI) => {
+    //console.log("payload",payload.id)
     try {
-      await axios.delete(
-        `${process.env.REACT_APP_JSON_SERVER}/comment/${payload}`
-      );
-      return thunkAPI.fulfillWithValue(payload);
+      await axios.patch(`http://3.36.97.100/melon/${payload.id}`, {
+        id: payload.id,
+        content: payload.target,
+      });
+      const data = await axios.get("http://3.36.97.100/melon");
+      return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
-
-export const __updatePost = createAsyncThunk(
-  "updatePost",
-  async (payload, thunkAPI) => {
-    try {
-      const { data } = await axios.patch(
-        `${process.env.REACT_APP_JSON_SERVER}/${payload.id}`,
-        { ...payload }
-      );
-      return thunkAPI.fulfillWithValue(data);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
-
 const melonSlice = createSlice({
-  name: "post",
+  name: "melon",
   initialState,
-  reducer,
-
+  reducers: {},
   extraReducers: {
-    //__getPosts
-    [__getPosts.pending]: (state) => {
+    //__addMelon
+    [__addMelon.pending]: (state) => {
       state.isLoading = true;
     },
-    [__getPosts.fulfilled]: (state, action) => {
+    [__addMelon.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.post = action.payload;
+      state.user = action.payload;
     },
-    [__getPosts.rejected]: (state, action) => {
-      state.isLoading = false;
-    },
-    //__getComments
-    [__getComments.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [__getComments.fulfilled]: (state, action) => {
-      state.isLoading = false;
-      state.comment = action.payload;
-    },
-    [__getComments.rejected]: (state, action) => {
-      state.isLoading = false;
-    },
-    //__addPost
-    [__addPost.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [__addPost.fulfilled]: (state, action) => {
-      state.isLoading = false;
-      state.post = [...state.post, { ...action.payload }];
-    },
-    [__addPost.rejected]: (state, action) => {
+    [__addMelon.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
-    //__addComment
-    [__addComment.pending]: (state) => {
+    //__Login
+    [__Login.pending]: (state) => {
       state.isLoading = true;
     },
-    [__addComment.fulfilled]: (state, action) => {
+    [__Login.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.comment = [...state.comment, { ...action.payload }];
+      state.user = action.payload;
     },
-    [__addComment.rejected]: (state, action) => {
+    [__Login.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
-    //__deletePost
-    [__deletePost.pending]: (state) => {
+    //__SignUp
+    [__SignUp.pending]: (state) => {
       state.isLoading = true;
     },
-    [__deletePost.fulfilled]: (state, action) => {
+    [__SignUp.fulfilled]: (state, action) => {
       state.isLoading = false;
-      const indexId = state.post.findIndex((post) => {
-        if (post.id == action.payload) {
-          return true;
-        }
-        return false;
-      });
-
-      state.post.splice(indexId, 1);
-      state.post = [...state.post];
+      state.user = action.payload;
     },
-    [__deletePost.rejected]: (state, action) => {
+    [__SignUp.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
-    //__deleteComment
-    [__deleteComment.pending]: (state) => {
+    //__nameCheck
+    [__nameCheck.pending]: (state) => {
       state.isLoading = true;
     },
-    [__deleteComment.fulfilled]: (state, action) => {
+    [__nameCheck.fulfilled]: (state, action) => {
       state.isLoading = false;
-      const indexId = state.comment.findIndex((comment) => {
-        if (comment.id === action.payload) {
-          return true;
-        }
-        return false;
-      });
-      state.comment.splice(indexId, 1);
-      state.comment = [...state.comment];
+      state.nameCheck = action.payload;
     },
-    [__deleteComment.rejected]: (state, action) => {
+    [__nameCheck.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
-    //__updatePost
-    [__updatePost.pending]: (state) => {
+    //__idCheck
+    [__idCheck.pending]: (state) => {
       state.isLoading = true;
     },
-    [__updatePost.fulfilled]: (state, action) => {
+    [__idCheck.fulfilled]: (state, action) => {
       state.isLoading = false;
-      const indexId = state.post.findIndex((post) => {
-        if (post.id == action.payload.id) {
-          return true;
-        }
-        return false;
-      });
-      state.post[indexId] = action.payload;
-
-      state.post = [...state.post];
+      state.idCheck = action.payload;
     },
-    [__updatePost.rejected]: (state, action) => {
+    [__idCheck.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    // //__getUser
+    // [__getUser.pending]: (state) => {
+    //   state.isLoading = true;
+    // },
+    // [__getUser.fulfilled]: (state, action) => {
+    //   state.isLoading = false;
+    //   state.user = action.payload;
+    // },
+    // [__getUser.rejected]: (state, action) => {
+    //   state.isLoading = false;
+    //   state.error = action.payload;
+    // },
+    //__getmelon
+    [__getmelon.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [__getmelon.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.melon = action.payload;
+    },
+    [__getmelon.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    //
+    [__createmelon.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [__createmelon.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.melon.push(action.payload);
+    },
+    [__createmelon.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__deleteTodo.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [__deleteTodo.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.melon = state.melon.filter((melon) => melon.id !== action.payload);
+    },
+    [__deleteTodo.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+    [__editTodo.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [__editTodo.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.melon = action.payload;
+    },
+    [__editTodo.rejected]: (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     },
   },
 });
-
+export const {} = melonSlice.actions;
 export default melonSlice.reducer;

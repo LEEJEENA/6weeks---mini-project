@@ -1,0 +1,64 @@
+{
+  "post": [
+    {
+      "id": 1,
+      "nickname": "Lee",
+      "password": "리액트 공부하기",
+      "password2": "공부끝!!!",
+      "isDone": false
+    },
+    {
+      "id": 2,
+      "nickname": "Lim",
+      "password": "진짜로?!",
+      "password2": "아닐껄?",
+      "isDone": true
+    }
+  ],
+  "comment": [
+    {
+      "id": 0.5740607183335305,
+      "writer": "kim",
+      "title": "",
+      "body": "",
+      "comment": "ㅡㅡ",
+      "userId": "2"
+    },
+    {
+      "id": 0.5969116090096487,
+      "writer": "park",
+      "title": "",
+      "body": "",
+      "comment": "ㅋㅋㅋㅋ",
+      "userId": "2"
+    },
+    {
+      "id": 0.21709486070501072,
+      "writer": "ㅋㅋㅋ",
+      "title": "",
+      "body": "",
+      "comment": "ㅋㅋㅋ",
+      "userId": "1"
+    }
+  ],
+
+  "login": [],
+  "user": [
+    {
+      "id": "wlsk1234",
+      "nickname": "Lee",
+      "password": "wlsk1234!@",
+      "password2": "wlsk1234!@"
+    },
+    {
+      "id": "wodnr1234",
+      "nickname": "wook",
+      "password": "wodnr1234!@",
+      "password2": "wodnr1234!@"
+    }
+  ],
+  "melon": {
+    "headers": { "access_token": "1234", "refresh_token": "abcd" },
+    "body": { "id": 1234, "pw": 12341234 }
+  }
+}
