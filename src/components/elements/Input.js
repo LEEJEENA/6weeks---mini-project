@@ -20,8 +20,9 @@ const StInput = styled.input`
   border: 0;
   color: #141414;
   border-radius: 10px;
-  box-shadow: 0px 2px 10px #CFADE9;
+  box-shadow: 0px 2px 10px #103609;
   background-color: #fff;
+
   ${({ size }) => {
     switch (size) {
       case "full":
@@ -49,11 +50,11 @@ const StInput = styled.input`
       case "line":
         return css`
           background-color: white;
-          border: 1px solid #FD5C63;
+          border: 1px solid #fd5c63;
         `;
       case "gray":
         return css`
-          background-color: #DCFFDC;
+          background-color: #dcffdc;
         `;
       default:
         return css`

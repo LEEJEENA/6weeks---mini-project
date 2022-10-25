@@ -7,7 +7,9 @@ const Button = (props) => {
     </StButton>
   );
 };
+
 export default Button;
+
 const StButton = styled.button`
   padding: 10px;
   margin: 5px 5px;
@@ -18,16 +20,17 @@ const StButton = styled.button`
   font-size: 1rem;
   line-height: 1.4;
   border: 0;
-  color: #315A47;
+  color: #315a47;
   border-radius: 10px;
-  box-shadow: 0px 2px 10px #D4DED9;
+  box-shadow: 0px 2px 10px #d4ded9;
   background-color: white;
   cursor: pointer;
   &:hover {
-    background-color: #315A47;
+    background-color: #315a47;
     border: 0;
     color: white;
   }
+
   ${({ size }) => {
     switch (size) {
       case "full":
@@ -70,24 +73,25 @@ const StButton = styled.button`
       case "reverse":
         return css`
           color: white;
-          background-color: #315A47;
+          background-color: #315a47;
           &:hover {
             background-color: white;
             border: 0;
-            color: #315A47;
+            color: #315a47;
           }
         `;
       case "line":
         return css`
           background-color: white;
-          border: 1px solid #315A47;
+          border: 1px solid #315a47;
         `;
+
       default:
         return css`
-          color: #315A47;
+          color: #315a47;
           background-color: white;
           &:hover {
-            background-color: #315A47;
+            background-color: #315a47;
             border: 0;
             color: white;
           }
