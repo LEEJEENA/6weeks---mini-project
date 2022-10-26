@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   __createmelon,
   __getmelon,
-  addMelon,
+  __addMelon,
 } from "../redux/modules/melonSlice";
-import imageCompression from "browser-image-compression";
+
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../components/elements/Button";
@@ -108,14 +108,30 @@ function Mypage() {
   //   SetImgUrl(file_url);
   // }selected
 
+  
+  // const imgFileHandler = (e) => {
+  //   setUploadImageForm(e.target.files[0]);
+
+  //   let reader = new FileReader();
+  //   if (e.target.files[0]) {
+  //     reader.readAsDataURL(e.target.files[0]);
+  //   }
+  //   reader.onload = () => {
+  //     const previewImgUrl = reader.result;
+  //     if (previewImgUrl) {
+  //       setPreviewImage([...previewImage, previewImgUrl]);
+  //     }
+  //   };
+  // };
+
   const [title, setTitle] = useState("");
   const [singer, setSinger] = useState("");
   const [song, setSong] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
-  const [previewImage, setPreviewImage] = useState("");
+  // const [previewImage, setPreviewImage] = useState("");
 
-  const [uploadImageForm, setUploadImageForm] = useState(null);
+  // const [uploadImageForm, setUploadImageForm] = useState(null);
 
   const [melon, setMelon] = useState({
     title: "",
@@ -123,23 +139,25 @@ function Mypage() {
     song: "",
     content: "",
     category: "",
-    file: "",
   });
 
-  const imgFileHandler = (e) => {
-    setUploadImageForm(e.target.files[0]);
 
-    let reader = new FileReader();
-    if (e.target.files[0]) {
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    reader.onload = () => {
-      const previewImgUrl = reader.result;
-      if (previewImgUrl) {
-        setPreviewImage([...previewImage, previewImgUrl]);
-      }
+  const [imageUrl, setImageUrl] = useState(null);
+  const [imgFile, setImgFile] = useState("")
+  const imgRef = useRef();
+ 
+
+  ///image 부분
+  const onChangeImage = () => {
+    const reader = new FileReader();
+
+    const file = imgRef.current.files[0];
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+        setImageUrl(reader.result);
+        setImgFile(file)
     };
-  };
+}
 
   const melonHandler = (e) => {
     setTitle(e.target.value);
@@ -152,50 +170,60 @@ function Mypage() {
     setMelon({
       ...melon,
       [name]: value,
-      file: uploadImageForm,
     });
   };
 
-  const submitHandler = () => {
-    dispatch(addMelon(melon));
-    if (!title || !singer || !song || !content || !category || !previewImage) {
-      return alert("빈칸 없이 입력해 주세요");
-    }
-  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
 
-  return (
-    <div>
-      <br />
-      <label> 글 제목</label>
-      <br />
+    formData.append("image", imgFile);
+    formData.append("title", melon.title);
+    formData.append("singer", melon.singer);
+    formData.append("song", melon.song);
+    formData.append("content", melon.content);
+    formData.append("category", melon.category);
+    
+    dispatch(__addMelon(formData));
+if (!title || !singer || !song || !content || !category) {
+  return alert("빈칸 없이 입력해 주세요");
+}
+    navigate("/");
+}
+
+return (
+  <div>
+    <br />
+    <label> 글 제목</label>
+    <br />
+​
+    <div method='post' id='add' encType="multipart/form-data">
       <STInputTitle
         type="text"
         name="title"
-        onChange={
-          melonHandler
-          //(e)=> setTitle(e.target.value) value={title}
-        }
+        onChange={ melonHandler}
       />
       <br />
-      <img
-        src={previewImage}
-        style={{ marginBottom: "24px", width: "464px", height: "301px" }}
-      />
-      <input
-        type="file"
-        id="addFile"
-        onChange={imgFileHandler}
-        accept="image/*"
-      />
-
-      {/* <button btn="image" label="addFile">추가하기</button> */}
-      {/* <img src={image.preview_URL}/>
-                 <input type="file"  accept="image/*"  onChange={saveImage}
-                 // 클릭할 때 마다 file input의 value를 초기화 하지 않으면 버그가 발생할 수 있다
-                onClick={(e)=>e.target.value = null}
-                ref={imageInput}/>  */}
-
-      {/* <input type="file" accept="image/*" onChange={(e)=> {onChangeHandler();}}></input> */}
+      <label htmlFor="imgFile">
+        <img
+          src={imageUrl}
+          style={{ marginBottom: "24px", width: "464px", height: "301px" }}
+        />
+        <input
+          style={{ display: "none" }}
+          type="file"
+          id="imgFile"
+          onChange={onChangeImage}
+          accept="image/*"
+          ref={imgRef}
+          name="imgFile"
+          multiple
+        />
+        <a type="button" htmlFor="inputImg">
+          이미지 업로드
+        </a>
+      </label>
+    
       <div>
         {" "}
         카테고리 리스트
@@ -219,7 +247,7 @@ function Mypage() {
         }
         name="singer"
       />
-
+​
       <label> 노래제목 </label>
       <STInput2
         type="text"
@@ -242,15 +270,11 @@ function Mypage() {
         name="content"
       />
       <br />
-      <Button
-        onClick={() => {
-          // onCreatemelon()
-          submitHandler();
-          navigate("/");
-        }}
+      <a  type='submit' form='add'
+        onClick={onSubmit}
       >
         입력하기
-      </Button>
+      </a>
       <Button
         onClick={() => {
           navigate(-1);
@@ -258,27 +282,27 @@ function Mypage() {
       >
         돌아가기
       </Button>
-
-      {/* <div>
-                  확인하기 위한 용도
-                  <div>
-                  
-                    {melon.map(melon=> (
-                      <div key={melon.id}>
-                        
-                        <div>{melon.title}</div>
-                        <div>{melon.singer}</div>
-                        <div>{melon.song}</div>
-                        <div>{melon.content}</div>
-                          <div>{melon.image.image_file}</div>  
-                        <div>{melon.selected}</div>
-                        <div>{melon.imageInput}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div> */}
     </div>
-  );
+    {/* <div>
+                확인하기 위한 용도
+                <div>
+                
+                  {melon.map(melon=> (
+                    <div key={melon.id}>
+                      
+                      <div>{melon.title}</div>
+                      <div>{melon.singer}</div>
+                      <div>{melon.song}</div>
+                      <div>{melon.content}</div>
+                        <div>{melon.image.image_file}</div>  
+                      <div>{melon.selected}</div>
+                      <div>{melon.imageInput}</div>
+                    </div>
+                  ))}
+                </div>
+              </div> */}
+  </div>
+);
 }
 
 export default Mypage;

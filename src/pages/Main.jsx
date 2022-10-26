@@ -22,14 +22,14 @@ const Main = () => {
       <div>
         <STImg src={picture} />
       </div>
-      {melon.map((melon) => (
-        <STBtn
+      {melon.map((melon, index) => (
+        <STBtn key={index}
           onClick={() => {
             navigate(`/Detail/${melon.id}`);
           }}
         >
           <STMainContent key={melon.id}>
-            <div>사진 : {melon.imageInput}</div>
+            <div>사진 : {melon.image}</div>
             <div>
               {melon.singer} - {melon.song} / {melon.selected}
             </div>

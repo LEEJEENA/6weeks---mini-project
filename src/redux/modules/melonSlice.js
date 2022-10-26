@@ -11,44 +11,12 @@ const initialState = {
 const accessToken = localStorage.getItem("accessToken");
 const refreshToken = localStorage.getItem("refreshToken");
 
-const instance = axios.create({
-  baseURL: "/",
-  headers: { Authorization: accessToken, "Refresh-Token": refreshToken },
-});
-
-const register = (payload) => {
-  const frm = new FormData();
-  frm.append("title", payload.title);
-  frm.append("singer", payload.singer);
-  frm.append("song", payload.song);
-  frm.append("content", payload.content);
-  frm.append("selected", payload.selected);
-  frm.append("image", payload.file);
-
-  //title, singer, song, content, selected, image
-
-  axios
-    .post("http://3.36.97.100/api/article", frm, {
-      headers: {
-        Authorization: accessToken,
-        "Refresh-Token": refreshToken,
-        "Content-Type": "multipart/form-data",
-      },
-    })
-    .then(function a(response) {
-      alert("게시되었습니다.");
-      window.location.replace("/");
-    })
-    .catch(function (error) {
-      console.log(error.response);
-    });
-};
-
-export const __createmelon = createAsyncThunk(
-  "melon/__createmelon",
+export const __getmelon = createAsyncThunk(
+  "melon/__getmelon",
   async (payload, thunkAPI) => {
+    //console.log(payload)
     try {
-      const data = await axios.post("http://localhost:3001/melon", payload);
+      const data = await axios.get("http://3.36.97.100/api/article");
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -56,12 +24,50 @@ export const __createmelon = createAsyncThunk(
   }
 );
 
+
+export const __addMelon = createAsyncThunk(
+  "melon/__addMelon",
+  async (payload, thunkAPI) => {
+    console.log(payload);
+    try {
+      await axios
+        .post("http://3.36.97.100/api/article", payload, {
+          headers: {
+            enctype: "multipart/form-data",
+            Access_Token: accessToken,
+            Refresh_Token: refreshToken,
+            "Cache-Control": "no-cache",
+          },
+        })
+        .then((response) => {
+          console.log("response", response.data);
+        });
+    } catch (error) {
+      console.log("error", error);
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+  
+  
+// export const __createmelon = createAsyncThunk(
+//   "melon/__createmelon",
+//   async (payload, thunkAPI) => {
+//     try {
+//       const data = await axios.post("http://3.36.97.100", payload);
+//       return thunkAPI.fulfillWithValue(data.data);
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error);
+//     }
+//   }
+// );
+
 export const __deleteTodo = createAsyncThunk(
   "melon/__deleteTodo",
   async (payload, thunkAPI) => {
     console.log("payload", payload);
     try {
-      const data = await axios.delete(`http://localhost:3001/melon/${payload}`);
+      const data = await axios.delete(`http://3.36.97.100/${payload}`);
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -74,11 +80,11 @@ export const __editTodo = createAsyncThunk(
   async (payload, thunkAPI) => {
     //console.log("payload",payload.id)
     try {
-      await axios.patch(`http://localhost:3001/melon/${payload.id}`, {
+      await axios.patch(`http://3.36.97.100${payload.id}`, {
         id: payload.id,
         content: payload.target,
       });
-      const data = await axios.get("http://localhost:3001/melon");
+      const data = await axios.get("http://3.36.97.100");
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -92,7 +98,7 @@ export const __getComment = createAsyncThunk(
   "comment/__getComment",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.get("http://localhost:3001/comment");
+      const data = await axios.get("http://3.36.97.100");
       // console.log(data);
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
@@ -107,7 +113,7 @@ export const __addComment = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       // payload를 데이터를 넣어줄때까지 실행하지 하지않겠다. //비동기
-      const data = await axios.post("http://localhost:3001/comment", payload);
+      const data = await axios.post("http://3.36.97.100", payload);
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -122,7 +128,7 @@ export const __deleteComment = createAsyncThunk(
     try {
       // payload를 데이터를 넣어줄때까지 실행하지 하지않겠다. //비동기
       const data = await axios.delete(
-        `http://localhost:3001/comment/${payload}`
+        `http://3.36.97.100/${payload}`
       );
       // console.log("페이로드",payload);
       return thunkAPI.fulfillWithValue(payload);
@@ -137,11 +143,11 @@ export const __editComment = createAsyncThunk(
   async (payload, thunkAPI) => {
     //console.log("payload",payload.id)
     try {
-      await axios.patch(`http://localhost:3001/comment/${payload.id}`, {
+      await axios.patch(`http://3.36.97.100/${payload.id}`, {
         id: payload.id,
         content: payload.target,
       });
-      const data = await axios.get("http://localhost:3001/comment");
+      const data = await axios.get("http://3.36.97.100");
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -149,44 +155,6 @@ export const __editComment = createAsyncThunk(
   }
 );
 
-export const __addMelon = createAsyncThunk(
-  "melon/__addMelon",
-  async (payload, thunkAPI) => {
-    const frm = new FormData();
-    const dataSet = {
-      title: payload.title,
-      singer: payload.singer,
-      song: payload.song,
-      content: payload.content,
-      category: payload.category,
-    };
-
-    frm.append("data", JSON.stringify(dataSet));
-    frm.append("file", payload.file);
-
-    try {
-      const data = await axios
-        .post(`http://3.36.97.100/melon/`, frm, {
-          headers: {
-            Authorization: accessToken,
-            "Refresh-Token": refreshToken,
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then(function a(response) {
-          alert("게시되었습니다.");
-          window.location.replace("/");
-        })
-        .catch(function (error) {
-          console.log(error.response);
-        });
-
-      return thunkAPI.fulfillWithValue(data.data);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
 
 // export const __Login = createAsyncThunk(
 //   "melon/__Login",
@@ -279,17 +247,7 @@ export const __idCheck = createAsyncThunk(
   }
 );
 
-export const __getmelon = createAsyncThunk(
-  "melon/__getmelon",
-  async (payload, thunkAPI) => {
-    try {
-      const data = await axios.get("http://3.36.97.100/melon");
-      return thunkAPI.fulfillWithValue(data.data);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
+
 
 const melonSlice = createSlice({
   name: "melon",
@@ -314,17 +272,17 @@ const melonSlice = createSlice({
       state.error = action.payload;
     },
 
-    [__createmelon.pending]: (state) => {
-      state.isLoading = true;
-    },
-    [__createmelon.fulfilled]: (state, action) => {
-      state.isLoading = false; // 네트워크 요청이 끝나서 false
-      state.melon.push(action.payload);
-    },
-    [__createmelon.rejected]: (state, action) => {
-      state.isLoading = false;
-      state.error = action.payload;
-    },
+    // [__createmelon.pending]: (state) => {
+    //   state.isLoading = true;
+    // },
+    // [__createmelon.fulfilled]: (state, action) => {
+    //   state.isLoading = false; // 네트워크 요청이 끝나서 false
+    //   state.melon.push(action.payload);
+    // },
+    // [__createmelon.rejected]: (state, action) => {
+    //   state.isLoading = false;
+    //   state.error = action.payload;
+    // },
 
     [__deleteTodo.pending]: (state) => {
       state.isLoading = true;
@@ -409,7 +367,7 @@ const melonSlice = createSlice({
     },
     [__addMelon.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.user = action.payload;
+      state.melon = action.payload;
     },
     [__addMelon.rejected]: (state, action) => {
       state.isLoading = false;
