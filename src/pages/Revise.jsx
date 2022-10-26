@@ -7,6 +7,8 @@ import {
   __deleteComment,
   __editComment,
 } from "../redux/modules/melonSlice";
+import styled from "styled-components";
+import Button from "../components/elements/Button";
 
 function Revise() {
   const comments = useSelector((state) => state.melon.comment);
@@ -62,7 +64,9 @@ function Revise() {
 
   return (
     <>
-      <input
+      {/* <hr /> */}
+      <br />
+      <STInputTitle
         placeholder="이름"
         value={comment.username}
         type="text"
@@ -70,7 +74,7 @@ function Revise() {
         onChange={onChangeInputHandler}
       />
 
-      <input
+      <STInputTitle
         placeholder="댓글을 입력하세요"
         value={comment.content}
         name="content"
@@ -78,7 +82,9 @@ function Revise() {
         onChange={onChangeInputHandler}
       />
 
-      <button onClick={onClickAddButton}>추가하기</button>
+      <Button size="large" color="reverse" onClick={onClickAddButton}>
+        추가하기
+      </Button>
 
       <div>
         {comments.map((comment) => {
@@ -129,3 +135,9 @@ function Revise() {
   );
 }
 export default Revise;
+
+const STInputTitle = styled.input`
+  width: 200px;
+  border: 1px solid rgb(238, 238, 238);
+  margin: auto;
+`;

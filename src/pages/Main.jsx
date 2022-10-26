@@ -3,41 +3,68 @@ import { useDispatch, useSelector } from "react-redux";
 import { __getmelon } from "../redux/modules/melonSlice";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import picture from "../components/elements/picture.png";
-import Header from "./Header";
+import Button from "../components/elements/Button";
+import Header from "../components/elements/Header";
+import Layout from "../components/elements/Layout";
 
 const Main = () => {
   const navigate = useNavigate();
   const melon = useSelector((state) => state.melon.melon);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(__getmelon());
+    console.log(melon);
   }, [dispatch]);
 
-  return (
-    <STBOX1>
-      <Header />
+  // const accessToken = localStorage.getItem("Access_Token");
+  // const refreshToken = localStorage.getItem("Refresh_Token");
+  // console.log(accessToken);
+  // console.log(refreshToken);
 
-      <div>
-        <STImg src={picture} />
-      </div>
-      {melon.map((melon) => (
-        <STBtn
+  return (
+    <div>
+      <Layout>
+        <Header />
+
+        <Button
+          size="write"
+          color="line"
           onClick={() => {
-            navigate(`/Detail/${melon.id}`);
+            navigate("/MyPage");
           }}
         >
-          <STMainContent key={melon.id}>
-            <div>사진 : {melon.imageInput}</div>
-            <div>
-              {melon.singer} - {melon.song} / {melon.selected}
-            </div>
-            <h4>제목 : {melon.title}</h4>
-          </STMainContent>
-        </STBtn>
-      ))}
-    </STBOX1>
+          글쓰기
+        </Button>
+        <STBOX1>
+          {melon.map((melon, index) => (
+            <STBtn
+              key={index}
+              onClick={() => {
+                navigate(`/Detail/${melon.id}`);
+              }}
+            >
+              <STMainContent key={melon.id}>
+                <div>사진 : </div>
+                <img
+                  src={melon.image}
+                  style={{
+                    marginBottom: "24px",
+                    width: "464px",
+                    height: "301px",
+                  }}
+                />
+                <div>
+                  {melon.singer} - {melon.song} / {melon.selected}
+                </div>
+                <h4>제목 : {melon.title}</h4>
+              </STMainContent>
+            </STBtn>
+          ))}
+        </STBOX1>
+      </Layout>
+    </div>
   );
 };
 
@@ -51,15 +78,6 @@ const STBOX1 = styled.div`
   text-align: center;
   display: flex;
   flex-direction: column;
-`;
-
-const STImg = styled.img`
-  width: 80%;
-  max-width: 1200px;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  margin: auto;
 `;
 
 const STBtn = styled.div`
