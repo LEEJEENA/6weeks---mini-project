@@ -68,7 +68,15 @@ export const __deleteMelon = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const data = await axios.delete(
-        `http://3.36.97.100/api/article/${payload}`
+        `http://3.36.97.100/api/article/${payload}`,
+        {
+          headers: {
+            enctype: "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,
+            RefreshToken: refreshToken,
+            "Cache-Control": "no-cache",
+          },
+        }
       );
       return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
@@ -123,10 +131,14 @@ export const __addComment = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       // payload를 데이터를 넣어줄때까지 실행하지 하지않겠다. //비동기
-      const data = await axios.post(
-        "http://3.36.97.100/api/comment/{articleId}",
-        payload
-      );
+      const data = await axios.post("http://3.36.97.100/api/comment", payload, {
+        headers: {
+          enctype: "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
+          RefreshToken: refreshToken,
+          "Cache-Control": "no-cache",
+        },
+      });
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -141,7 +153,15 @@ export const __deleteComment = createAsyncThunk(
     try {
       // payload를 데이터를 넣어줄때까지 실행하지 하지않겠다. //비동기
       const data = await axios.delete(
-        `http://3.36.97.100/api/comment/{commentId}/${payload}`
+        `http://3.36.97.100/api/comment/{commentId}/${payload}`,
+        {
+          headers: {
+            enctype: "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,
+            RefreshToken: refreshToken,
+            "Cache-Control": "no-cache",
+          },
+        }
       );
       // console.log("페이로드",payload);
       return thunkAPI.fulfillWithValue(payload);
@@ -159,8 +179,12 @@ export const __editComment = createAsyncThunk(
       const data = await axios.put(
         `http://3.36.97.100/api/comment/{articleId}`,
         {
-          id: payload.id,
-          content: payload.target,
+          headers: {
+            enctype: "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,
+            RefreshToken: refreshToken,
+            "Cache-Control": "no-cache",
+          },
         }
       );
       return thunkAPI.fulfillWithValue(data.data);

@@ -45,7 +45,7 @@ function Detail() {
 
   const onClickUdapte = (data) => {
     const formData = new FormData();
-    formData.append("file", imgFile);
+    // formData.append("file", imgFile);
     formData.append("title", data.title);
     formData.append("singer", data.singer);
     formData.append("song", data.song);
