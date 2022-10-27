@@ -179,7 +179,7 @@ function Detail() {
                     <Button
                       onClick={() => {
                         onMelonDelete(input.id);
-                        navigate("/");
+                        navigate("/Main");
                       }}
                     >
                       삭제하기
@@ -188,8 +188,8 @@ function Detail() {
                 )}
               </div>
             </>
+            <Revise />
           </STBox1>
-          <Revise />
         </STBox>
       </Layout>
     </div>
@@ -217,6 +217,7 @@ const STBox = styled.div`
   height: 300px;
   display: flex;
   flex-direction: column;
+
   /* justify-content: left; */
   /* padding-left: 100px; */
   gap: 15px;

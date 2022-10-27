@@ -32,7 +32,7 @@ function Revise() {
     // formData.append("comment", comments.comment);
     const Fdata = { id: Number(id), comment: comments.comment };
     if (comments.comment.trim() === "") {
-      return alert("모든 항목을 입력해주세요.");
+      return alert("댓글을 입력하세요.");
     }
     dispatch(__addComment(Fdata));
     setComments({
