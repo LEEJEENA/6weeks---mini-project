@@ -122,6 +122,9 @@ const SignUp = () => {
   // };
 
   const idCheckHandler = () => {
+    if (input.username === "") {
+      return alert("아이디를 입력하세요!");
+    }
     dispatch(__idCheck(input.username));
     // if (userdata.idCheck) {
     //   return;
@@ -265,7 +268,7 @@ const SignUp = () => {
           <StRight_contact>
             <StButton
               onClick={() => {
-                navigate("/Login");
+                navigate("/");
               }}
               size="medium"
               color="reverse"
