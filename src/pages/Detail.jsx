@@ -179,7 +179,7 @@ function Detail() {
                     <Button
                       onClick={() => {
                         onMelonDelete(input.id);
-                        navigate("/");
+                        navigate("/Main");
                       }}
                     >
                       삭제하기
