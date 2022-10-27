@@ -52,7 +52,7 @@ const Main = () => {
                         style={{
                           marginTop: "-20px",
                           width: "250px",
-                          height: "170px",
+                          height: "250px",
                         }}
                       />
                       <div>

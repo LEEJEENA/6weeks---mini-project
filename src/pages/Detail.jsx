@@ -87,8 +87,8 @@ function Detail() {
                 src={input.image}
                 style={{
                   marginBottom: "24px",
-                  width: "464px",
-                  height: "301px",
+                  width: "400px",
+                  height: "400px",
                 }}
               />
               <div>

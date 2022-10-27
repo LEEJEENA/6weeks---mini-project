@@ -473,6 +473,11 @@ const melonSlice = createSlice({
     },
     [__idCheck.fulfilled]: (state, action) => {
       state.isLoading = false;
+      if (action.payload) {
+        return window.alert("사용할 수 없는 아이디입니다.");
+      } else {
+        return window.alert("사용 가능한 아이디입니다.");
+      }
       state.idCheck = action.payload;
     },
     [__idCheck.rejected]: (state, action) => {

@@ -42,6 +42,7 @@ function Revise() {
   };
   useEffect(() => {
     dispatch(__getComment(id));
+    console.log(commentList);
   }, [dispatch]);
   // 댓글 삭제 버튼
   const onDeleteButton = (payload) => {
@@ -104,13 +105,13 @@ function Revise() {
                 ) : (
                   <>
                     {comment.comment}
-                    <button
+                    {/* <button
                       onClick={() => {
                         toggleEdit();
                       }}
                     >
                       수정{" "}
-                    </button>
+                    </button> */}
                     <button onClick={() => onDeleteButton(comment.id)}>
                       삭제하기
                     </button>

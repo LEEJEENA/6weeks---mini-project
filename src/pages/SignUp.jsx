@@ -11,7 +11,7 @@ import {
 import Button from "../components/elements/Button";
 import Input from "../components/elements/Input";
 import styled from "styled-components";
-import PT from "../static/하기싫어.jpg";
+import PT from "../static/watermelon.png";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const SignUp = () => {
     password: "",
     passwordCheck: "",
   };
-
+  const userdata = useSelector((state) => state.melon);
   const [input, setInput] = useState(initialState);
   const [checkName, setCheckName] = useState({
     msg: "닉네임을 입력해주세요",
@@ -36,7 +36,6 @@ const SignUp = () => {
   const [checkPW, setCheckPW] = useState({ msg: "", isOk: "false" });
   const [checkPW2, setCheckPW2] = useState({ msg: "", isOk: "false" });
 
-  const userdata = useSelector((state) => state.melon);
   // useEffect(() => {
   //   dispatch(__getUser());
   // }, []);
@@ -57,25 +56,32 @@ const SignUp = () => {
     ) {
       return alert("입력을 확인하세요!");
     }
+    console.log(checkPW.isOk);
+    console.log(checkPW.isOk);
+
+    if (checkPW.isOk === false || checkPW2.isOk === false) {
+      return alert("비밀번호를 확인하세요!");
+    }
+
     console.log(input);
     dispatch(__SignUp(input));
     setInput(initialState);
   };
 
-  const nameCheckHandler = () => {
-    dispatch(__nameCheck);
-    if (userdata.nameCheck) {
-      return setCheckName({
-        msg: "사용할 수 없는 닉네임입니다.",
-        isOk: "false",
-      });
-    } else {
-      return setCheckName({
-        msg: "사용 가능한 닉네임입니다.",
-        isOk: "true",
-      });
-    }
-  };
+  // const nameCheckHandler = () => {
+  //   dispatch(__nameCheck);
+  //   if (userdata.nameCheck) {
+  //     return setCheckName({
+  //       msg: " ",
+  //       isOk: "false",
+  //     });
+  //   } else {
+  //     return setCheckName({
+  //       msg: " ",
+  //       isOk: "true",
+  //     });
+  //   }
+  // };
 
   // const nameCheckHandler = (newName) => {
   //   {
@@ -117,17 +123,19 @@ const SignUp = () => {
 
   const idCheckHandler = () => {
     dispatch(__idCheck(input.username));
-    if (userdata.idCheck) {
-      return setCheckID({
-        msg: "사용할 수 없는 아이디입니다.",
-        isOk: "false",
-      });
-    } else {
-      return setCheckID({
-        msg: "사용 가능한 아이디입니다.",
-        isOk: "true",
-      });
-    }
+    // if (userdata.idCheck) {
+    //   return;
+    // setCheckID({
+    //   msg: "사용할 수 없는 아이디입니다.",
+    //   isOk: "false",
+    // });
+    // } else {
+    //   return;
+    // setCheckID({
+    //   msg: "사용 가능한 아이디입니다.",
+    //   isOk: "true",
+    // });
+    // }
   };
 
   //정규식 최소 8자, 하나의 이상의 대소문자 및 하나의 숫자, 하나의 특수문자
@@ -160,15 +168,19 @@ const SignUp = () => {
     // console.log(input);
     passwordCheckHandler(input.password);
     samePasswordCheckHandler(input.password, input.passwordCheck);
-    nameCheckHandler(input.nickname);
-    idCheckHandler();
+    // nameCheckHandler(input.nickname);
   }, [input]);
+
+  // useEffect(() => {
+  //   idCheckHandler();
+  // }, [checkID]);
+
   return (
     <StSignUp>
       <Stlogin_box>
         <Stlogin_box_Left>
           <StLeft_text>
-            <StLeft_text_h2>Water Melon</StLeft_text_h2>
+            <StLeft_text_h2>WaterMelon</StLeft_text_h2>
             <StLeft_text_h5>당신만의 숨은 명곡을 공유해보세요!</StLeft_text_h5>
           </StLeft_text>
         </Stlogin_box_Left>
@@ -186,8 +198,8 @@ const SignUp = () => {
             ></Input>
           </StRight_contact>
           <StMsg>
-            {checkName.msg}
-            <StButton onClick={() => nameCheckHandler}>중복확인</StButton>
+            {/* {checkName.msg} */}
+            {/* <StButton></StButton> */}
           </StMsg>
           <StRight_contact>
             <Input
@@ -202,8 +214,8 @@ const SignUp = () => {
             ></Input>
           </StRight_contact>
           <StMsg>
-            {checkID.msg}
-            <StButton onClick={() => idCheckHandler}>중복확인</StButton>
+            {/* {checkID.msg} */}
+            <StButton onClick={idCheckHandler}>중복확인</StButton>
           </StMsg>
 
           <StRight_contact>
@@ -342,6 +354,7 @@ const StLeft_text_h2 = styled.div`
   text-align: center;
   font-size: 50px;
   font-weight: 500;
+  color: #c54a4a;
 `;
 const StLeft_text_h5 = styled.div`
   display: block;
@@ -349,6 +362,7 @@ const StLeft_text_h5 = styled.div`
   text-align: center;
   font-size: 19px;
   font-weight: 400;
+  color: #ffffff;
 `;
 
 const StCenterH5 = styled.h5`
