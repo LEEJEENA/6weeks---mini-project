@@ -226,7 +226,7 @@ export const __Login = createAsyncThunk(
         // console.log(accessToken);
         // console.log(refreshToken);
         // console.log(data.data.nickname);
-        window.location.replace("/");
+        window.location.replace("/Main");
       }
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
