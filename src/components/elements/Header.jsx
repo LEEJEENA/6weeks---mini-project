@@ -19,7 +19,7 @@ function Header() {
       },
     });
     localStorage.clear();
-    navigate("/Login");
+    window.location.replace("/");
   };
 
   return (
@@ -30,7 +30,7 @@ function Header() {
         <a>
           <STTitle
             onClick={() => {
-              navigate("/");
+              navigate("/Main");
             }}
           >
             WaterMelon

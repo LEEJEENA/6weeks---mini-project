@@ -265,7 +265,7 @@ const SignUp = () => {
           <StRight_contact>
             <StButton
               onClick={() => {
-                navigate("/Login");
+                navigate("/");
               }}
               size="medium"
               color="reverse"
