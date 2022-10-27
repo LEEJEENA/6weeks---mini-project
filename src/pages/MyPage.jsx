@@ -80,7 +80,7 @@ function Mypage() {
     if (!title || !singer || !song || !content || !category) {
       return alert("빈칸 없이 입력해 주세요");
     }
-    navigate("/");
+    window.location.replace("/");
   };
   return (
     <div>

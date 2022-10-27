@@ -6,7 +6,7 @@ import { __Login } from "../redux/modules/melonSlice";
 import Button from "../components/elements/Button";
 import Input from "../components/elements/Input";
 import styled, { css } from "styled-components";
-import PT from "../static/피곤해.jpg";
+import PT from "../static/login2.png";
 
 const Login = () => {
   const initialState = {
@@ -38,7 +38,7 @@ const Login = () => {
       <Stlogin_box>
         <Stlogin_box_Left>
           <StLeft_text>
-            <StLeft_text_h2>Water Melon</StLeft_text_h2>
+            <StLeft_text_h2>WaterMelon</StLeft_text_h2>
             <StLeft_text_h5>당신만의 숨은 명곡을 공유해보세요!</StLeft_text_h5>
           </StLeft_text>
         </Stlogin_box_Left>
@@ -178,6 +178,7 @@ const StLeft_text_h2 = styled.div`
   text-align: center;
   font-size: 50px;
   font-weight: 500;
+  color: #0d5a10e8;
 `;
 const StLeft_text_h5 = styled.div`
   display: block;
@@ -185,6 +186,7 @@ const StLeft_text_h5 = styled.div`
   text-align: center;
   font-size: 19px;
   font-weight: 400;
+  color: #ffffff;
 `;
 
 const StCenterH5 = styled.h5`
