@@ -2,25 +2,46 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Button from "./Button";
 import picture from "./picture.png";
+import axios from "axios";
 
 function Header() {
   const navigate = useNavigate();
+  const userNickname = localStorage.getItem("nickname");
+
+  const onClickHandler = async () => {
+    const accessToken = localStorage.getItem("Access_Token");
+    const refreshToken = localStorage.getItem("Refresh_Token");
+    await axios.get(`${process.env.REACT_APP_SERVER}/auth/logout`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        RefreshToken: refreshToken,
+        "Cache-Control": "no-cache",
+      },
+    });
+    localStorage.clear();
+    navigate("/Login");
+  };
 
   return (
     <>
       <STBOX>
-        <span>
-          <h1
+        {/* <span> */}
+
+        <a>
+          <STTitle
             onClick={() => {
               navigate("/");
             }}
           >
             WaterMelon
-            <Button onClick={() => {}} size="logout" color="logout">
-              로그아웃
-            </Button>
-          </h1>
-        </span>
+          </STTitle>
+          <STNickname>{userNickname}님</STNickname>
+          <Button onClick={onClickHandler} size="logout" color="logout">
+            로그아웃
+          </Button>
+        </a>
+
+        {/* </span> */}
       </STBOX>
       <STImg src={picture} />
     </>
@@ -37,14 +58,16 @@ const STBOX = styled.div`
   max-width: 1200px;
   width: 700px;
   height: 80px;
-  padding-top: 20px;
-  padding-bottom: 40px;
+  padding-top: 40px;
+  padding-bottom: 30px;
   padding-left: 200px;
-  text-align: center;
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+  align-self: center;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
 
-  display: flex;
   flex-direction: column;
 
   margin: auto;
@@ -62,4 +85,16 @@ const STImg = styled.img`
   /* padding-top: 0px; */
   /* margin-top: 100px; */
   margin: auto;
+`;
+const STTitle = styled.a`
+  margin-left: 100px;
+  font-size: 45px;
+  font-weight: bold;
+  font-style: italic;
+`;
+
+const STNickname = styled.a`
+  font-size: 14px;
+  margin-left: 30px;
+  font-weight: bold;
 `;

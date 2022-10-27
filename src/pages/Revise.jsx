@@ -9,133 +9,122 @@ import {
 } from "../redux/modules/melonSlice";
 import styled from "styled-components";
 import Button from "../components/elements/Button";
-
+import Input from "../components/elements/Input";
 function Revise() {
-  const comments = useSelector((state) => state.melon.comment);
-
+  const commentList = useSelector((state) => state.melon.comment);
   const dispatch = useDispatch();
   const { id } = useParams();
-
-  const [comment, setComment] = useState({
-    username: "",
-    content: "",
+  const [comments, setComments] = useState({
+    name: "",
+    comment: "",
   });
-
   //댓글 추가하기 관련
   const onChangeInputHandler = (e) => {
     const { name, value } = e.target;
-    setComment({
-      ...comment,
+    setComments({
+      ...comments,
       [name]: value,
     });
   };
-
   const onClickAddButton = (e) => {
     e.preventDefault();
-    if (comment.content.trim() === "" || comment.username.trim() === "") {
+    // const formData = new FormData();
+    // formData.append("comment", comments.comment);
+    const Fdata = { id: Number(id), comment: comments.comment };
+    if (comments.comment.trim() === "") {
       return alert("모든 항목을 입력해주세요.");
     }
-    dispatch(__addComment({ id: comments.length + 1, todoId: id, ...comment }));
-
-    setComment({
-      username: "",
-      content: "",
+    dispatch(__addComment(Fdata));
+    setComments({
+      name: "",
+      comment: "",
     });
   };
   useEffect(() => {
-    dispatch(__getComment());
+    dispatch(__getComment(id));
   }, [dispatch]);
-
   // 댓글 삭제 버튼
   const onDeleteButton = (payload) => {
     dispatch(__deleteComment(payload));
   };
-
-  const onClickUdapte = (id) => {
-    dispatch(__editComment({ id: id, target: target }));
+  const onClickUdapte = (iddata) => {
+    dispatch(__editComment({ id: iddata, comment: target }));
     setEdit(false);
   };
-
   const [edit, setEdit] = useState(false);
   const [target, setTarget] = useState();
   const toggleEdit = () => {
     setEdit(!edit);
   };
-
   return (
     <>
       {/* <hr /> */}
       <br />
-      <STInputTitle
+      {/* <STInputTitle
         placeholder="이름"
         value={comment.username}
         type="text"
         name="username"
         onChange={onChangeInputHandler}
-      />
-
-      <STInputTitle
-        placeholder="댓글을 입력하세요"
-        value={comment.content}
-        name="content"
-        type="text"
-        onChange={onChangeInputHandler}
-      />
-
+      /> */}
+      <div style={{ margin: "auto" }}>
+        <Input
+          placeholder="댓글을 입력하세요"
+          value={comments.comment || ""}
+          name="comment"
+          type="text"
+          onChange={onChangeInputHandler}
+        />
+      </div>
       <Button size="large" color="reverse" onClick={onClickAddButton}>
         추가하기
       </Button>
-
       <div>
-        {comments.map((comment) => {
-          if (comment.todoId == id) {
-            return (
-              <div key={comment.id}>
-                <div>
-                  {comment.username} :
-                  {/* {comment.content}
+        {commentList.map((comment) => {
+          return (
+            <div key={comment.id}>
+              <div>
+                {comment.nickname} :
+                {/* {comment.content}
                                     <button onClick={() => onDeleteButton(comment.id)}>삭제하기</button>
                                     <button>수정하기</button> */}
-                  {edit ? (
-                    <>
-                      <textarea
-                        type="text"
-                        value={target}
-                        onChange={({ target }) => setTarget(target.value)}
-                      />
-
-                      <div>
-                        <button onClick={() => onClickUdapte(comment.id)}>
-                          수정완료
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      {comment.content}
-                      <button
-                        onClick={() => {
-                          toggleEdit();
-                        }}
-                      >
-                        수정{" "}
+                {edit ? (
+                  <>
+                    <textarea
+                      type="text"
+                      value={target}
+                      onChange={({ target }) => setTarget(target.value)}
+                    />
+                    <div>
+                      <button onClick={() => onClickUdapte(comment.id)}>
+                        수정완료
                       </button>
-                      <button onClick={() => onDeleteButton(comment.id)}>
-                        삭제하기
-                      </button>
-                    </>
-                  )}
-                </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {comment.comment}
+                    <button
+                      onClick={() => {
+                        toggleEdit();
+                      }}
+                    >
+                      수정{" "}
+                    </button>
+                    <button onClick={() => onDeleteButton(comment.id)}>
+                      삭제하기
+                    </button>
+                  </>
+                )}
               </div>
-            );
-          }
+            </div>
+          );
         })}
       </div>
     </>
   );
 }
 export default Revise;
-
 const STInputTitle = styled.input`
   width: 200px;
   border: 1px solid rgb(238, 238, 238);

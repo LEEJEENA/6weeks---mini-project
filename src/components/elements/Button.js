@@ -63,7 +63,7 @@ const StButton = styled.button`
         return css`
           width: 100px;
           height: 50px !important;
-          margin-right: 50px;
+          margin-right: 30px;
           border-radius: 10px;
           font-weight: 1000;
           font-size: 16px;
@@ -103,6 +103,7 @@ const StButton = styled.button`
             color: #315a47;
           }
         `;
+
       case "line":
         return css`
           background-color: white;
@@ -112,6 +113,11 @@ const StButton = styled.button`
         return css`
           background-color: rgb(207, 207, 175);
           border: 1px solid #315a47;
+          &:hover {
+            background-color: #315a47;
+            border: 0;
+            color: rgb(207, 207, 175);
+          }
         `;
 
       default:

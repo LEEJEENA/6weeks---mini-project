@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // initial State
@@ -32,7 +32,9 @@ export const __getmelon = createAsyncThunk(
   "melon/__getmelon",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.get("http://3.36.97.100/api/articles");
+      const data = await axios.get(
+        `${process.env.REACT_APP_SERVER}/api/articles`
+      );
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -45,7 +47,7 @@ export const __addMelon = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       await axios
-        .post("http://3.36.97.100/api/article", payload, {
+        .post(`${process.env.REACT_APP_SERVER}/api/article`, payload, {
           headers: {
             enctype: "multipart/form-data",
             Authorization: `Bearer ${accessToken}`,
@@ -68,7 +70,7 @@ export const __deleteMelon = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const data = await axios.delete(
-        `http://3.36.97.100/api/article/${payload}`,
+        `${process.env.REACT_APP_SERVER}/api/article/${payload}`,
         {
           headers: {
             enctype: "multipart/form-data",
@@ -91,11 +93,54 @@ export const __editMelon = createAsyncThunk(
     console.log("payload", payload);
     try {
       const data = await axios.put(
-        `http://3.36.97.100/api/article/${payload.id}`,
+        `${process.env.REACT_APP_SERVER}/api/article/${payload.id}`,
         payload.formData,
         {
           headers: {
             enctype: "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,
+            RefreshToken: refreshToken,
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
+      console.log("data", data.data);
+      return thunkAPI.fulfillWithValue(data.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+//comment 부분
+export const __getComment = createAsyncThunk(
+  "comment/__getComment",
+  async (payload, thunkAPI) => {
+    try {
+      console.log(payload);
+      const data = await axios.get(
+        `${process.env.REACT_APP_SERVER}/api/comments/${payload}`
+      );
+      return thunkAPI.fulfillWithValue(data.data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const __addComment = createAsyncThunk(
+  "comment/__addComment",
+  // async 는 프로미스에 새로운 신문법이다. // 언제끝나는지 알려준다.
+  async (payload, thunkAPI) => {
+    try {
+      //console.log(payload)
+      // payload를 데이터를 넣어줄때까지 실행하지 하지않겠다. //비동기
+      const data = await axios.post(
+        `${process.env.REACT_APP_SERVER}/api/comment/${payload.id}`,
+        JSON.stringify(payload.comment),
+        {
+          headers: {
+            "Content-Type": `application/json`,
             Authorization: `Bearer ${accessToken}`,
             RefreshToken: refreshToken,
             "Cache-Control": "no-cache",
@@ -109,51 +154,15 @@ export const __editMelon = createAsyncThunk(
   }
 );
 
-//comment 부분
-export const __getComment = createAsyncThunk(
-  "melon/__getComment",
-  async (payload, thunkAPI) => {
-    try {
-      const data = await axios.get(
-        "http://3.36.97.100/api/comment/{articleId}"
-      );
-      // console.log(data);
-      return thunkAPI.fulfillWithValue(data.data);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
-
-export const __addComment = createAsyncThunk(
-  "melon/__addComment",
-  // async 는 프로미스에 새로운 신문법이다. // 언제끝나는지 알려준다.
-  async (payload, thunkAPI) => {
-    try {
-      // payload를 데이터를 넣어줄때까지 실행하지 하지않겠다. //비동기
-      const data = await axios.post("http://3.36.97.100/api/comment", payload, {
-        headers: {
-          enctype: "multipart/form-data",
-          Authorization: `Bearer ${accessToken}`,
-          RefreshToken: refreshToken,
-          "Cache-Control": "no-cache",
-        },
-      });
-      return thunkAPI.fulfillWithValue(data.data);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
-  }
-);
-
 export const __deleteComment = createAsyncThunk(
-  "melon/__deleteComment",
+  "comment/__deleteComment",
   // async 는 프로미스에 새로운 신문법이다. // 언제끝나는지 알려준다.
   async (payload, thunkAPI) => {
     try {
+      console.log(payload);
       // payload를 데이터를 넣어줄때까지 실행하지 하지않겠다. //비동기
       const data = await axios.delete(
-        `http://3.36.97.100/api/comment/{commentId}/${payload}`,
+        `${process.env.REACT_APP_SERVER}/api/comment/${payload}`,
         {
           headers: {
             enctype: "multipart/form-data",
@@ -172,22 +181,24 @@ export const __deleteComment = createAsyncThunk(
 );
 
 export const __editComment = createAsyncThunk(
-  "melon/__editComment",
+  "comment/__editComment",
   async (payload, thunkAPI) => {
     //console.log("payload",payload.id)
     try {
+      console.log(payload);
       const data = await axios.put(
-        `http://3.36.97.100/api/comment/{articleId}`,
+        `${process.env.REACT_APP_SERVER}/api/comment/${payload.id}`,
+        JSON.stringify(payload.comment),
         {
           headers: {
-            enctype: "multipart/form-data",
+            "Content-Type": `application/json`,
             Authorization: `Bearer ${accessToken}`,
             RefreshToken: refreshToken,
             "Cache-Control": "no-cache",
           },
         }
       );
-      return thunkAPI.fulfillWithValue(data.data);
+      return thunkAPI.fulfillWithValue(payload);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -199,20 +210,22 @@ export const __Login = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       console.log(payload);
-      const data = await axios.post("http://3.36.97.100/auth/login", payload);
-      console.log(data);
+      const data = await axios.post(
+        `${process.env.REACT_APP_SERVER}/auth/login`,
+        payload
+      );
 
       if (data.status === 200 || data.status === 201) {
         window.localStorage.setItem("Access_Token", data.data.accessToken);
         window.localStorage.setItem("Refresh_Token", data.data.refreshToken);
-        window.localStorage.setItem("nickname", data.data.data);
+        window.localStorage.setItem("nickname", data.data.nickname);
         // setCookie("Access_Token", Access_Token);
         // setCookie("Refresh_Token", Refresh_Token);
         // setCookie("nickname", data.data.data);
         alert("로그인 성공");
-        console.log(accessToken);
-        console.log(refreshToken);
-        console.log(data.data.data);
+        // console.log(accessToken);
+        // console.log(refreshToken);
+        // console.log(data.data.nickname);
         window.location.replace("/");
       }
       return thunkAPI.fulfillWithValue(data.data);
@@ -232,7 +245,7 @@ export const __SignUp = createAsyncThunk(
     try {
       console.log(payload);
       await axios
-        .post("http://3.36.97.100/auth/signup", payload)
+        .post(`${process.env.REACT_APP_SERVER}/auth/signup`, payload)
 
         .then((response) => {
           console.log(response);
@@ -249,7 +262,7 @@ export const __nameCheck = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const data = await axios.post(
-        `http://3.36.97.100/user/nameCheck/`,
+        `${process.env.REACT_APP_SERVER}/user/nameCheck/`,
         payload
       );
       return thunkAPI.fulfillWithValue(data.data);
@@ -264,9 +277,12 @@ export const __idCheck = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       // console.log(payload);
-      const data = await axios.post(`http://3.36.97.100/auth/idCheck`, {
-        username: payload,
-      });
+      const data = await axios.post(
+        `${process.env.REACT_APP_SERVER}/auth/idCheck`,
+        {
+          username: payload,
+        }
+      );
       // console.log(data.data);
       // console.log(payload);
       return thunkAPI.fulfillWithValue(data.data);
@@ -338,7 +354,16 @@ const melonSlice = createSlice({
     },
     [__editMelon.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.melon = action.payload;
+
+      const indexId = state.melon.findIndex((melon) => {
+        if (melon.id == action.payload.id) {
+          return true;
+        }
+        return false;
+      });
+      state.melon[indexId] = action.payload;
+
+      state.melon = [...state.melon];
     },
     [__editMelon.rejected]: (state, action) => {
       state.isLoading = false;
@@ -390,7 +415,16 @@ const melonSlice = createSlice({
     },
     [__editComment.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.comment = action.payload;
+
+      const indexId = state.comment.findIndex((comment) => {
+        if (comment.id == action.payload.id) {
+          return true;
+        }
+        return false;
+      });
+      state.comment[indexId] = action.payload.comment;
+
+      state.comment = [...state.comment];
     },
     [__editComment.rejected]: (state, action) => {
       state.isLoading = false;
