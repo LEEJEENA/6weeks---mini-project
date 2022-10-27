@@ -22,7 +22,6 @@ const StInput = styled.input`
   border-radius: 10px;
   box-shadow: 0px 2px 10px #103609;
   background-color: #fff;
-
   ${({ size }) => {
     switch (size) {
       case "full":
@@ -37,6 +36,11 @@ const StInput = styled.input`
         return css`
           width: 200px;
           height: 40px !important;
+        `;
+      case "textarea":
+        return css`
+          width: 67%;
+          height: 300px !important;
         `;
       default:
         return css`

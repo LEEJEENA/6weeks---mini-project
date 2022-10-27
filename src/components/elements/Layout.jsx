@@ -10,7 +10,7 @@ export default Layout;
 const StLayout = styled.div`
   max-width: 1200px;
   min-width: 800px;
-  margin: 100px auto;
+  margin: 50px auto;
   border-radius: 8px;
   /* background-color: white; */
 `;

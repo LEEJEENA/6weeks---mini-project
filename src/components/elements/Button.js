@@ -22,7 +22,6 @@ const StButton = styled.button`
   border: 0;
   color: #315a47;
   border-radius: 10px;
-  box-shadow: 0px 2px 10px #d4ded9;
   background-color: white;
   cursor: pointer;
   &:hover {
@@ -60,6 +59,30 @@ const StButton = styled.button`
           padding: 20px;
           border-radius: 50px;
         `;
+      case "logout":
+        return css`
+          width: 100px;
+          height: 50px !important;
+          margin-right: 30px;
+          border-radius: 10px;
+          font-weight: 1000;
+          font-size: 16px;
+          position: relative;
+          text-align: center;
+          float: right;
+        `;
+      case "write":
+        return css`
+          width: 100px;
+          height: 50px !important;
+          margin-right: 50px;
+          border-radius: 10px;
+          font-weight: 1000;
+          font-size: 16px;
+          position: relative;
+          text-align: center;
+          float: right;
+        `;
       default:
         return css`
           width: 240px;
@@ -80,16 +103,28 @@ const StButton = styled.button`
             color: #315a47;
           }
         `;
+
       case "line":
         return css`
           background-color: white;
           border: 1px solid #315a47;
+        `;
+      case "logout":
+        return css`
+          background-color: rgb(207, 207, 175);
+          border: 1px solid #315a47;
+          &:hover {
+            background-color: #315a47;
+            border: 0;
+            color: rgb(207, 207, 175);
+          }
         `;
 
       default:
         return css`
           color: #315a47;
           background-color: white;
+          box-shadow: 0px 2px 10px #d4ded9;
           &:hover {
             background-color: #315a47;
             border: 0;
