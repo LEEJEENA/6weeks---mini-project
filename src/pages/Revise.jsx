@@ -85,10 +85,11 @@ function Revise() {
           return (
             <div key={comment.id}>
               <div>
-                {comment.nickname} :
-                {/* {comment.content}
-                                    <button onClick={() => onDeleteButton(comment.id)}>삭제하기</button>
-                                    <button>수정하기</button> */}
+                {comment.nickname} :{comment.comment}
+                <button onClick={() => onDeleteButton(comment.id)}>
+                  삭제하기
+                </button>
+                {/* <button>수정하기</button>
                 {edit ? (
                   <>
                     <textarea
@@ -105,18 +106,18 @@ function Revise() {
                 ) : (
                   <>
                     {comment.comment}
-                    {/* <button
+                    <button
                       onClick={() => {
                         toggleEdit();
                       }}
                     >
                       수정{" "}
-                    </button> */}
+                    </button>
                     <button onClick={() => onDeleteButton(comment.id)}>
                       삭제하기
                     </button>
                   </>
-                )}
+                )} */}
               </div>
             </div>
           );

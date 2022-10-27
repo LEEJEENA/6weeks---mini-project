@@ -199,13 +199,14 @@ export default Detail;
 const STTextarea = styled.textarea`
   width: 800px;
   border: 1px solid rgb(255, 255, 255);
-  background-color: rgb(158, 154, 154);
+  background-color: rgb(255, 255, 255);
   padding: 12px;
   font-size: 14px;
   height: 250px;
 `;
 const STInputarea = styled.textarea`
   width: 800x;
+  background-color: rgb(133, 129, 129);
   border: 1px solid rgb(238, 238, 238);
   padding: 12px;
   font-size: 14px;
